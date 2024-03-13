@@ -24,7 +24,7 @@ fastapi-tui = "fastapi_tui.main:app"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-fastapi = {extras = ["all"], version = "^0.110.0"}
+fastapi = { extras = ["all"], version = "^0.110.0" }
 textual = "^0.52.1"
 
 [build-system]
@@ -68,10 +68,11 @@ pymdown-extensions = "^10.7"
 pygments = "^2.17.2"
 
 # setup PoeThePoet tasks
+textual-dev = "^1.5.1"
 [tool.poe.tasks]
 pre.cmd = "pre-commit run --all-files"
 pre.help = "Run pre-commit checks"
-mypy.cmd = "mypy py_maker/**/*.py tests/**/*.py --strict"
+mypy.cmd = "mypy fastapi_tui/**/*.py tests/**/*.py --strict"
 mypy.help = "Run mypy checks"
 format.cmd = "ruff format ."
 format.help = "Format code with Ruff"
@@ -123,7 +124,7 @@ lint.extend-ignore = [
   "ISC001",
 ] # these are ignored for ruff formatting
 
-src = ["py_maker"]
+src = ["fastapi_tui"]
 target-version = "py39" # minimum python version supported
 
 [tool.ruff.format]
@@ -148,6 +149,9 @@ known-first-party = []
 [tool.ruff.lint.pyupgrade]
 keep-runtime-typing = true
 
+[tool.mypy]
+python_version = "3.9"
+
 [[tool.mypy.overrides]]
 disable_error_code = ["method-assign", "no-untyped-def", "attr-defined"]
 module = "tests.*"
@@ -161,14 +165,14 @@ addopts = [
   "--cov-report",
   "term-missing",
   "--cov-report",
-  "html"
+  "html",
 ]
 filterwarnings = []
 mock_use_standalone_module = true
 markers = [
   "unit: Unit tests",
   "integration: Integration tests",
-  "rewrite: Tests need Rewriting", # will be skipped automatically
+  "rewrite: Tests need Rewriting",  # will be skipped automatically
 ]
 
 [tool.coverage.run]
