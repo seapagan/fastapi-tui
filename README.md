@@ -8,6 +8,7 @@ to create a TUI application that can communicate with a FastAPI server.
 Right now there is no usable code here, but I'm working on it.
 
 - [Development setup](#development-setup)
+- [FastAPI server](#fastapi-server)
 - [License](#license)
 - [Credits](#credits)
 
@@ -25,7 +26,17 @@ Then, activate the virtual environment:
 $ poetry shell
 ```
 
-Now, you can start to code the meat of your application.
+## FastAPI server
+
+The project contains a very basic FastAPI server. You can run it directly using
+the following command:
+
+```console
+$ uvicorn fastapi_tui.server:api --reload
+```
+
+There is a single endpoint at `/` that returns a JSON response with a message.
+This server will be used initially to test the TUI application.
 
 ## License
 
