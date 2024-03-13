@@ -3,11 +3,13 @@
 This is a work in progress to see how to use
 [Textual](https://textual.textualize.io/) and
 [FastAPI](https://fastapi.tiangolo.com/) together, and to see if it's possible
-to create a TUI application that can communicate with a FastAPI server.
+to create a TUI application that can start/stop a FastAPI server and display the
+logs in the TUI.
 
 Right now there is no usable code here, but I'm working on it.
 
 - [Development setup](#development-setup)
+- [TUI application](#tui-application)
 - [FastAPI server](#fastapi-server)
 - [License](#license)
 - [Credits](#credits)
@@ -24,6 +26,15 @@ Then, activate the virtual environment:
 
 ```console
 $ poetry shell
+```
+
+## TUI application
+
+The TUI application is a work in progress and does not have full functionality
+or styling yet. You can run it using the following command:
+
+```console
+$ fastapi-tui
 ```
 
 ## FastAPI server

@@ -131,6 +131,11 @@ class FastapiTUI(App[None]):
                 pass
 
 
-if __name__ == "__main__":
+def app() -> None:
+    """Run the application."""
     app = FastapiTUI()
     app.run()
+
+
+if __name__ == "__main__":
+    app()
