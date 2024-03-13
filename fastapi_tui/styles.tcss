@@ -1,4 +1,4 @@
-Horizontal {
+Horizontal#buttons {
   background: $boost;
   height: 5;
   margin: 1;
@@ -6,6 +6,28 @@ Horizontal {
   dock: top;
 }
 
+Horizontal#statusline {
+  height: 1;
+}
+
+Label#statuslabel {
+  padding-left: 2;
+}
+
 Button {
   margin: 1;
+}
+
+ServerStatus#status {
+  color: red;
+}
+
+ScrollableContainer {
+  min-height: 10;
+  # background: $boost;
+  # margin: 1;
+  margin-left: 1;
+  margin-right: 1;
+  border: solid cyan 70%;
+  width: 100%;
 }

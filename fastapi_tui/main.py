@@ -15,8 +15,26 @@ import sys
 from pathlib import Path
 
 from textual.app import App, ComposeResult
-from textual.containers import Horizontal
-from textual.widgets import Button, Footer, Header
+from textual.containers import Horizontal, ScrollableContainer
+from textual.css.query import NoMatches
+from textual.reactive import reactive
+from textual.widget import Widget
+from textual.widgets import (
+    Button,
+    Footer,
+    Header,
+    Label,
+)
+
+
+class ServerStatus(Widget):
+    """Server status widget."""
+
+    server_status: reactive[str] = reactive("Not Running")
+
+    def render(self) -> str:
+        """Render the widget."""
+        return f"{self.server_status}"
 
 
 class FastapiTUI(App[None]):
@@ -24,6 +42,7 @@ class FastapiTUI(App[None]):
 
     CSS_PATH = "styles.tcss"
     TITLE = "FastAPI TUI"
+    SUB_TITLE = "[WIP] A Textual UI for FastAPI"
 
     subproc = None
 
@@ -33,8 +52,14 @@ class FastapiTUI(App[None]):
         yield Horizontal(
             Button("Start Server", id="start", variant="success"),
             Button("Stop Server", id="stop", variant="error", disabled=True),
+            id="buttons",
         )
-
+        yield Horizontal(
+            Label("Server Status : ", id="statuslabel"),
+            ServerStatus(id="status"),
+            id="statusline",
+        )
+        yield ScrollableContainer(id="log")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -43,6 +68,8 @@ class FastapiTUI(App[None]):
 
         self.stop_button = self.query_one("#stop")
         self.start_button = self.query_one("#start")
+
+        self.status_label = self.query_one("#status")
 
     def on_unmount(self) -> None:
         """Stop the server if running when we shutdown."""
@@ -86,6 +113,8 @@ class FastapiTUI(App[None]):
             if self.subproc:
                 self.stop_button.disabled = False
                 self.start_button.disabled = True
+                self.query_one(ServerStatus).server_status = "Running"
+                self.query_one(ServerStatus).styles.color = "lightgreen"
 
     def stop_server(self) -> None:
         """Stop the server."""
@@ -94,6 +123,12 @@ class FastapiTUI(App[None]):
             self.subproc = None
             self.stop_button.disabled = True
             self.start_button.disabled = False
+            try:
+                # this will fail if called when the app is exiting.
+                self.query_one(ServerStatus).server_status = "Not Running"
+                self.query_one(ServerStatus).styles.color = "red"
+            except NoMatches:
+                pass
 
 
 if __name__ == "__main__":
