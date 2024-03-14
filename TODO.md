@@ -12,6 +12,8 @@
   bugs me. **That would not be great for accessibility though**.
 - maybe move the server status to the footer.
 - add the ability to run a custom process, not just uvicorn.
+- cancel autoscroll when the user scrolls up, reenable when the user scrolls to
+  the bottom.
 
 ## Docs
 

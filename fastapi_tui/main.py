@@ -18,6 +18,7 @@ from typing import IO, cast
 
 from textual import on
 from textual.app import App, ComposeResult
+from textual.binding import Binding
 from textual.containers import Horizontal
 from textual.css.query import NoMatches
 from textual.reactive import reactive
@@ -44,6 +45,10 @@ class FastapiTUI(App[None]):
     TITLE = "FastAPI TUI"
     SUB_TITLE = "[WIP] A Textual UI for FastAPI"
 
+    BINDINGS = [  # noqa: RUF012
+        Binding("ctrl+q", "exit", "Quit", key_display="^Q"),
+    ]
+
     subproc: subprocess.Popen[str] | None = None
 
     def __init__(self) -> None:
@@ -51,6 +56,14 @@ class FastapiTUI(App[None]):
         super().__init__()
         self.uvicorn_binary = self.get_uvicorn()
         self.queue: Queue[str] = Queue()
+
+    def action_exit(self) -> None:
+        """Exit the application.
+
+        Called when the user presses 'ctrl+q'.
+        """
+        self.stop_server()
+        self.exit()
 
     def compose(self) -> ComposeResult:
         """Compose the application layout."""
