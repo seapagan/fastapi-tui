@@ -16,6 +16,7 @@ from pathlib import Path
 from queue import Queue
 from typing import IO, cast
 
+from textual import on
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal
 from textual.css.query import NoMatches
@@ -80,12 +81,15 @@ class FastapiTUI(App[None]):
         """Stop the server if running when we shutdown."""
         self.stop_server()
 
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        """Handle button presses."""
-        if event.button.id == "start":
-            self.start_server()
-        elif event.button.id == "stop":
-            self.stop_server()
+    @on(Button.Pressed, "#start")
+    def btn_start(self) -> None:
+        """Handle the start button press."""
+        self.start_server()
+
+    @on(Button.Pressed, "#stop")
+    def btn_stop(self) -> None:
+        """Handle the start button press."""
+        self.stop_server()
 
     def get_uvicorn(self) -> str | None:
         """Get uvicorn absolute path.
