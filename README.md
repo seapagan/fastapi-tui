@@ -15,6 +15,7 @@ expect too much :grin:
 - [Development setup](#development-setup)
 - [TUI application](#tui-application)
 - [FastAPI server](#fastapi-server)
+- [Further Plans](#further-plans)
 - [License](#license)
 - [Credits](#credits)
 
@@ -59,6 +60,15 @@ $ uvicorn fastapi_tui.server:api --reload
 
 There is a single endpoint at `"/"` that returns a JSON response with a message.
 This server will be used initially to test the TUI application.
+
+## Further Plans
+
+See the [TODO](TODO.md) file for a list of things I want to do next with this
+project. The original idea was to see if I could create a TUI application that
+could start/stop a FastAPI server and display the logs in the TUI, which I have
+done. The next steps are to tidy up the code and to see if I can make the TUI
+application more useful. Not sure how far I'll take this, but it's been a fun
+experiment so far.
 
 ## License
 
