@@ -145,12 +145,6 @@ class FastapiTUI(App[None]):
             except NoMatches:
                 pass
 
-    def enqueue_output(self, out: IO[str], queue: Queue[str]) -> None:
-        """Add output to the queue."""
-        for line in iter(out.readline, b""):
-            queue.put(line)
-        out.close()
-
 
 def app() -> None:
     """Run the application."""
