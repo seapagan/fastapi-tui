@@ -138,19 +138,29 @@ class FastapiTUI(App[None]):
     def stop_server(self) -> None:
         """Stop the server."""
         if self.subproc:
-            self.subproc.send_signal(signal.SIGINT)
-            self.subproc.wait()
-            self.subproc = None
+            # stop the uvicorn server
+            self.stop_server_process()
+
             self.stop_button.disabled = True
             self.start_button.disabled = False
+
+            # stop the log and queue threads
             self.log_thread.stop()
             self.queue_thread.stop()
+
             try:
-                # this will fail if called when the app is exiting.
+                # this will raise 'NoMataches' if called when we are exiting.
                 self.query_one(ServerStatus).server_status = "Not Running"
                 self.query_one(ServerStatus).styles.color = "red"
             except NoMatches:
                 pass
+
+    def stop_server_process(self) -> None:
+        """Stop the actual server process."""
+        if self.subproc:
+            self.subproc.send_signal(signal.SIGINT)
+            self.subproc.wait()
+            self.subproc = None
 
 
 def app() -> None:
