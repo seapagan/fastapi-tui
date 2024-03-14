@@ -14,7 +14,7 @@ import subprocess
 import sys
 import threading
 from pathlib import Path
-from queue import Queue
+from queue import Empty, Queue
 from select import select
 from typing import IO, cast
 
@@ -39,12 +39,12 @@ class ServerStatus(Widget):
 class LogThread(threading.Thread):
     """A Thread that writes to a RichLog widget."""
 
-    def __init__(self, log_view: RichLog, out: IO[str] | None) -> None:
+    def __init__(self, log_view: RichLog, queue: Queue) -> None:
         """Init the class."""
         super().__init__()
         self.log_view = log_view
         self.stop_event = threading.Event()
-        self.out = out
+        self.queue = queue
 
     def stop(self) -> None:
         """Stop the thread."""
@@ -54,13 +54,12 @@ class LogThread(threading.Thread):
     def run(self) -> None:
         """Run the thread."""
         while not self.stop_event.is_set():
-            ready_to_read, _, _ = select([self.out], [], [], 0.1)
-            for io in ready_to_read:
-                line = io.readline()
-                if line != b"":
-                    self.log_view.write(line.strip())
-                else:  # If no line is read, it might mean EOF
-                    break
+            try:
+                line = self.queue.get_nowait()
+            except Empty:  # noqa: PERF203
+                pass
+            else:
+                self.log_view.write(line.strip())
 
         self.log_view.write("------------\n")
 
@@ -147,8 +146,15 @@ class FastapiTUI(App[None]):
                 self.query_one(ServerStatus).server_status = "Running"
                 self.query_one(ServerStatus).styles.color = "lightgreen"
 
+                t = threading.Thread(
+                    target=self.enqueue_output,
+                    args=(self.subproc.stdout, self.queue),
+                )
+                t.daemon = True  # Thread dies with the program
+                t.start()
+
                 self.log_thread = LogThread(
-                    cast(RichLog, self.log_output), self.subproc.stdout
+                    cast(RichLog, self.log_output), self.queue
                 )
                 self.log_thread.start()
 
@@ -167,6 +173,12 @@ class FastapiTUI(App[None]):
                 self.query_one(ServerStatus).styles.color = "red"
             except NoMatches:
                 pass
+
+    def enqueue_output(self, out: IO[str], queue: Queue[str]) -> None:
+        """Add output to the queue."""
+        for line in iter(out.readline, b""):
+            queue.put(line)
+        out.close()
 
 
 def app() -> None:
