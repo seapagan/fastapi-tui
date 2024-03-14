@@ -4,9 +4,12 @@ This is a work in progress to see how to use
 [Textual](https://textual.textualize.io/) and
 [FastAPI](https://fastapi.tiangolo.com/) together, and to see if it's possible
 to create a TUI application that can start/stop a FastAPI server and display the
-logs in the TUI.
+logs in the TUI. This is primarily for development since you would not want to
+run a FastAPI server in a TUI in production.
 
-Right now there is no usable code here, but I'm working on it.
+The code here works, but needs tidying up. The TUI application is very basic and
+I have made no effort to optimize it, it's also my first Textual App so don't
+expect too much :grin:
 
 - [Development setup](#development-setup)
 - [TUI application](#tui-application)
@@ -30,12 +33,15 @@ $ poetry shell
 
 ## TUI application
 
-The TUI application is a work in progress and does not have full functionality
-or styling yet. You can run it using the following command:
+You can run the application using the following command:
 
 ```console
 $ fastapi-tui
 ```
+
+It allows you to start and stop the FastAPI server, and to display the logs in
+a separate panel. The logs output is not styled yet but I'll look to improve
+that in the next iteration.
 
 ## FastAPI server
 
@@ -46,7 +52,7 @@ the following command:
 $ uvicorn fastapi_tui.server:api --reload
 ```
 
-There is a single endpoint at `/` that returns a JSON response with a message.
+There is a single endpoint at `"/"` that returns a JSON response with a message.
 This server will be used initially to test the TUI application.
 
 ## License
