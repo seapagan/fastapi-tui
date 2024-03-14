@@ -12,10 +12,8 @@ import shutil
 import signal
 import subprocess
 import sys
-import threading
 from pathlib import Path
-from queue import Empty, Queue
-from select import select
+from queue import Queue
 from typing import IO, cast
 
 from textual.app import App, ComposeResult
@@ -24,6 +22,8 @@ from textual.css.query import NoMatches
 from textual.reactive import reactive
 from textual.widget import Widget
 from textual.widgets import Button, Footer, Header, Label, RichLog
+
+from fastapi_tui.threads import LogThread, QueueThread
 
 
 class ServerStatus(Widget):
@@ -34,58 +34,6 @@ class ServerStatus(Widget):
     def render(self) -> str:
         """Render the widget."""
         return f"{self.server_status}"
-
-
-class QueueThread(threading.Thread):
-    """Thread to read from a pipe and add to a queue."""
-
-    def __init__(self, pipe: IO[str], queue: Queue[str]) -> None:
-        """Init the class."""
-        super().__init__()
-        self.pipe = pipe
-        self.queue = queue
-        self.stop_event = threading.Event()
-
-    def stop(self) -> None:
-        """Stop the thread."""
-        self.stop_event.set()
-        self.join()
-
-    def run(self) -> None:
-        """Run the thread."""
-        while not self.stop_event.is_set():
-            line = self.pipe.readline()
-            if line == "":
-                break
-            self.queue.put(line)
-
-
-class LogThread(threading.Thread):
-    """A Thread that writes to a RichLog widget."""
-
-    def __init__(self, log_view: RichLog, queue: Queue[str]) -> None:
-        """Init the class."""
-        super().__init__()
-        self.log_view = log_view
-        self.stop_event = threading.Event()
-        self.queue = queue
-
-    def stop(self) -> None:
-        """Stop the thread."""
-        self.stop_event.set()
-        self.join()
-
-    def run(self) -> None:
-        """Run the thread."""
-        while not self.stop_event.is_set():
-            try:
-                line = self.queue.get_nowait()
-            except Empty:  # noqa: PERF203
-                pass
-            else:
-                self.log_view.write(line.strip())
-
-        self.log_view.write("------------")
 
 
 class FastapiTUI(App[None]):
