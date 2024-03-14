@@ -13,9 +13,10 @@ import signal
 import subprocess
 import sys
 import threading
+import time
 from pathlib import Path
-from queue import Empty, Queue  # noqa: F401
-from typing import IO
+from queue import Empty, Queue
+from typing import IO, cast
 
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal
@@ -33,6 +34,28 @@ class ServerStatus(Widget):
     def render(self) -> str:
         """Render the widget."""
         return f"{self.server_status}"
+
+
+class LogThread(threading.Thread):
+    """A Thread that writes to a RichLog widget."""
+
+    def __init__(self, log_view: RichLog) -> None:
+        """Init the class."""
+        super().__init__()
+        self.log_view = log_view
+        self.stop_event = threading.Event()
+
+    def stop(self) -> None:
+        """Stop the thread."""
+        self.stop_event.set()
+        self.join()
+
+    def run(self) -> None:
+        """Run the thread."""
+        while not self.stop_event.is_set():
+            self.log_view.write("Thread Running!")
+            time.sleep(1)
+        self.log_view.write("Thread Stopped!")
 
 
 class FastapiTUI(App[None]):
@@ -95,11 +118,11 @@ class FastapiTUI(App[None]):
             return shutil.which("uvicorn", path=venv_path)
         return None
 
-    def enqueue_output(self, out: IO[str], queue: Queue[str]) -> None:
-        """Enqueue strings from an IO stream."""
-        for line in iter(out.readline, b""):
-            queue.put(line)
-        out.close()
+    # def enqueue_output(self, out: IO[str], log_window: RichLog) -> None:
+    #     """Enqueue strings from an IO stream."""
+    #     for line in iter(out.readline, b""):
+    #         log_window.write(line.strip())
+    #     out.close()
 
     def start_server(self) -> None:
         """Start the server."""
@@ -124,12 +147,14 @@ class FastapiTUI(App[None]):
                 self.query_one(ServerStatus).styles.color = "lightgreen"
 
                 # start a thread to populate the queue
-                qt = threading.Thread(
-                    target=self.enqueue_output,
-                    args=(self.subproc.stdout, self.queue),
-                )
-                qt.daemon = True  # thread dies with the program
-                qt.start()
+                # self.qt = threading.Thread(
+                #     target=self.enqueue_output,
+                #     args=(self.subproc.stdout, self.log_output),
+                # )
+                # self.qt.daemon = True  # thread dies with the program
+                # self.qt.start()
+                self.thread = LogThread(cast(RichLog, self.log_output))
+                self.thread.start()
 
     def stop_server(self) -> None:
         """Stop the server."""
@@ -139,6 +164,7 @@ class FastapiTUI(App[None]):
             self.subproc = None
             self.stop_button.disabled = True
             self.start_button.disabled = False
+            self.thread.stop()
             try:
                 # this will fail if called when the app is exiting.
                 self.query_one(ServerStatus).server_status = "Not Running"
