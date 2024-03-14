@@ -54,28 +54,33 @@ class FastapiTUI(App[None]):
 
     def compose(self) -> ComposeResult:
         """Compose the application layout."""
+        # ------------------------ create the widgets ------------------------ #
+        self.start_button = Button(
+            "Start Server", id="start", variant="success"
+        )
+        self.stop_button = Button(
+            "Stop Server", id="stop", variant="error", disabled=True
+        )
+        self.status_label = ServerStatus(id="status")
+        self.log_output = RichLog(id="log")
+
+        # ------------------------ display the widgets ----------------------- #
         yield Header()
         yield Horizontal(
-            Button("Start Server", id="start", variant="success"),
-            Button("Stop Server", id="stop", variant="error", disabled=True),
+            self.start_button,
+            self.stop_button,
             id="buttons",
         )
         yield Horizontal(
             Label("Server Status : ", id="statuslabel"),
-            ServerStatus(id="status"),
+            self.status_label,
             id="statusline",
         )
-        yield RichLog(id="log")
+        yield self.log_output
         yield Footer()
 
     def on_mount(self) -> None:
         """Mount the application."""
-        self.stop_button = self.query_one("#stop")
-        self.start_button = self.query_one("#start")
-
-        self.status_label = self.query_one("#status")
-
-        self.log_output = self.query_one("#log")
 
     def on_unmount(self) -> None:
         """Stop the server if running when we shutdown."""
@@ -128,10 +133,8 @@ class FastapiTUI(App[None]):
                 self.queue_thread = QueueThread(
                     cast(IO[str], self.subproc.stdout), self.queue
                 )
+                self.log_thread = LogThread(self.log_output, self.queue)
 
-                self.log_thread = LogThread(
-                    cast(RichLog, self.log_output), self.queue
-                )
                 self.queue_thread.start()
                 self.log_thread.start()
 
