@@ -13,9 +13,9 @@ import signal
 import subprocess
 import sys
 import threading
-import time
 from pathlib import Path
-from queue import Empty, Queue
+from queue import Queue
+from select import select
 from typing import IO, cast
 
 from textual.app import App, ComposeResult
@@ -39,7 +39,7 @@ class ServerStatus(Widget):
 class LogThread(threading.Thread):
     """A Thread that writes to a RichLog widget."""
 
-    def __init__(self, log_view: RichLog, out: IO[str] | None = None) -> None:
+    def __init__(self, log_view: RichLog, out: IO[str] | None) -> None:
         """Init the class."""
         super().__init__()
         self.log_view = log_view
@@ -54,9 +54,15 @@ class LogThread(threading.Thread):
     def run(self) -> None:
         """Run the thread."""
         while not self.stop_event.is_set():
-            self.log_view.write("Thread Running!")
-            time.sleep(1)
-        self.log_view.write("Thread Stopped!")
+            ready_to_read, _, _ = select([self.out], [], [], 0.1)
+            for io in ready_to_read:
+                line = io.readline()
+                if line != b"":
+                    self.log_view.write(line.strip())
+                else:  # If no line is read, it might mean EOF
+                    break
+
+        self.log_view.write("------------\n")
 
 
 class FastapiTUI(App[None]):
