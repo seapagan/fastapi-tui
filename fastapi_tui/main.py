@@ -45,6 +45,12 @@ class FastapiTUI(App[None]):
 
     subproc: subprocess.Popen[str] | None = None
 
+    def __init__(self) -> None:
+        """Initialize the application."""
+        super().__init__()
+        self.uvicorn_binary = self.get_uvicorn()
+        self.queue: Queue[str] = Queue()
+
     def compose(self) -> ComposeResult:
         """Compose the application layout."""
         yield Header()
@@ -63,15 +69,12 @@ class FastapiTUI(App[None]):
 
     def on_mount(self) -> None:
         """Mount the application."""
-        self.uvicorn_binary = self.get_uvicorn()
-
         self.stop_button = self.query_one("#stop")
         self.start_button = self.query_one("#start")
 
         self.status_label = self.query_one("#status")
 
         self.log_output = self.query_one("#log")
-        self.queue: Queue[str] = Queue()
 
     def on_unmount(self) -> None:
         """Stop the server if running when we shutdown."""

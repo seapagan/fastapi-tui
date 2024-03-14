@@ -1,7 +1,8 @@
 Horizontal#buttons {
-  background: $boost;
+  # background: $boost;
   height: 5;
   margin: 1;
+  margin-bottom: 0;
   min-width: 50;
   dock: top;
 }
