@@ -11,11 +11,16 @@ The code here works, but needs tidying up. The TUI application is very basic and
 I have made no effort to optimize it, it's also my first Textual App so don't
 expect too much :grin:
 
+- [In Action](#in-action)
 - [Development setup](#development-setup)
 - [TUI application](#tui-application)
 - [FastAPI server](#fastapi-server)
 - [License](#license)
 - [Credits](#credits)
+
+## In Action
+
+![Example](media/screencast.gif)
 
 ## Development setup
 
