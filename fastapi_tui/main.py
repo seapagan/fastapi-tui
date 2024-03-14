@@ -39,11 +39,12 @@ class ServerStatus(Widget):
 class LogThread(threading.Thread):
     """A Thread that writes to a RichLog widget."""
 
-    def __init__(self, log_view: RichLog) -> None:
+    def __init__(self, log_view: RichLog, out: IO[str] | None = None) -> None:
         """Init the class."""
         super().__init__()
         self.log_view = log_view
         self.stop_event = threading.Event()
+        self.out = out
 
     def stop(self) -> None:
         """Stop the thread."""
@@ -118,12 +119,6 @@ class FastapiTUI(App[None]):
             return shutil.which("uvicorn", path=venv_path)
         return None
 
-    # def enqueue_output(self, out: IO[str], log_window: RichLog) -> None:
-    #     """Enqueue strings from an IO stream."""
-    #     for line in iter(out.readline, b""):
-    #         log_window.write(line.strip())
-    #     out.close()
-
     def start_server(self) -> None:
         """Start the server."""
         if self.uvicorn_binary and not self.subproc:
@@ -146,15 +141,10 @@ class FastapiTUI(App[None]):
                 self.query_one(ServerStatus).server_status = "Running"
                 self.query_one(ServerStatus).styles.color = "lightgreen"
 
-                # start a thread to populate the queue
-                # self.qt = threading.Thread(
-                #     target=self.enqueue_output,
-                #     args=(self.subproc.stdout, self.log_output),
-                # )
-                # self.qt.daemon = True  # thread dies with the program
-                # self.qt.start()
-                self.thread = LogThread(cast(RichLog, self.log_output))
-                self.thread.start()
+                self.log_thread = LogThread(
+                    cast(RichLog, self.log_output), self.subproc.stdout
+                )
+                self.log_thread.start()
 
     def stop_server(self) -> None:
         """Stop the server."""
@@ -164,7 +154,7 @@ class FastapiTUI(App[None]):
             self.subproc = None
             self.stop_button.disabled = True
             self.start_button.disabled = False
-            self.thread.stop()
+            self.log_thread.stop()
             try:
                 # this will fail if called when the app is exiting.
                 self.query_one(ServerStatus).server_status = "Not Running"
