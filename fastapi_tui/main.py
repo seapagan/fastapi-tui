@@ -36,10 +36,34 @@ class ServerStatus(Widget):
         return f"{self.server_status}"
 
 
+class QueueThread(threading.Thread):
+    """Thread to read from a pipe and add to a queue."""
+
+    def __init__(self, pipe: IO[str], queue: Queue[str]) -> None:
+        """Init the class."""
+        super().__init__()
+        self.pipe = pipe
+        self.queue = queue
+        self.stop_event = threading.Event()
+
+    def stop(self) -> None:
+        """Stop the thread."""
+        self.stop_event.set()
+        self.join()
+
+    def run(self) -> None:
+        """Run the thread."""
+        while not self.stop_event.is_set():
+            line = self.pipe.readline()
+            if line == "":
+                break
+            self.queue.put(line)
+
+
 class LogThread(threading.Thread):
     """A Thread that writes to a RichLog widget."""
 
-    def __init__(self, log_view: RichLog, queue: Queue) -> None:
+    def __init__(self, log_view: RichLog, queue: Queue[str]) -> None:
         """Init the class."""
         super().__init__()
         self.log_view = log_view
@@ -61,7 +85,7 @@ class LogThread(threading.Thread):
             else:
                 self.log_view.write(line.strip())
 
-        self.log_view.write("------------\n")
+        self.log_view.write("------------")
 
 
 class FastapiTUI(App[None]):
@@ -146,16 +170,14 @@ class FastapiTUI(App[None]):
                 self.query_one(ServerStatus).server_status = "Running"
                 self.query_one(ServerStatus).styles.color = "lightgreen"
 
-                t = threading.Thread(
-                    target=self.enqueue_output,
-                    args=(self.subproc.stdout, self.queue),
+                self.queue_thread = QueueThread(
+                    cast(IO[str], self.subproc.stdout), self.queue
                 )
-                t.daemon = True  # Thread dies with the program
-                t.start()
 
                 self.log_thread = LogThread(
                     cast(RichLog, self.log_output), self.queue
                 )
+                self.queue_thread.start()
                 self.log_thread.start()
 
     def stop_server(self) -> None:
@@ -167,6 +189,7 @@ class FastapiTUI(App[None]):
             self.stop_button.disabled = True
             self.start_button.disabled = False
             self.log_thread.stop()
+            self.queue_thread.stop()
             try:
                 # this will fail if called when the app is exiting.
                 self.query_one(ServerStatus).server_status = "Not Running"
