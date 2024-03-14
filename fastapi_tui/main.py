@@ -61,6 +61,7 @@ class FastapiTUI(App[None]):
         self.stop_button = Button(
             "Stop Server", id="stop", variant="error", disabled=True
         )
+        self.clear_button = Button("Clear Log", id="clear", variant="default")
         self.status_label = ServerStatus(id="status")
         self.log_output = RichLog(id="log")
 
@@ -69,6 +70,7 @@ class FastapiTUI(App[None]):
         yield Horizontal(
             self.start_button,
             self.stop_button,
+            self.clear_button,
             id="buttons",
         )
         yield Horizontal(
@@ -95,6 +97,11 @@ class FastapiTUI(App[None]):
     def btn_stop(self) -> None:
         """Handle the start button press."""
         self.stop_server()
+
+    @on(Button.Pressed, "#clear")
+    def btn_clear(self) -> None:
+        """Handle the clear button press."""
+        self.log_output.clear()
 
     def get_uvicorn(self) -> str | None:
         """Get uvicorn absolute path.
