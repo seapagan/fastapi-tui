@@ -28,7 +28,7 @@ class LogThread(threading.Thread):
             try:
                 line = self.queue.get_nowait()
             except Empty:  # noqa: PERF203
-                time.sleep(0.1)  # lets not grab all the CPU!
+                time.sleep(0.02)  # lets not grab all the CPU!
             else:
                 self.log_view.write(line.strip())
 
