@@ -12,19 +12,17 @@ import shutil
 import signal
 import subprocess
 import sys
+import threading
 from pathlib import Path
+from queue import Empty, Queue  # noqa: F401
+from typing import IO
 
 from textual.app import App, ComposeResult
-from textual.containers import Horizontal, ScrollableContainer
+from textual.containers import Horizontal
 from textual.css.query import NoMatches
 from textual.reactive import reactive
 from textual.widget import Widget
-from textual.widgets import (
-    Button,
-    Footer,
-    Header,
-    Label,
-)
+from textual.widgets import Button, Footer, Header, Label, RichLog
 
 
 class ServerStatus(Widget):
@@ -44,7 +42,7 @@ class FastapiTUI(App[None]):
     TITLE = "FastAPI TUI"
     SUB_TITLE = "[WIP] A Textual UI for FastAPI"
 
-    subproc = None
+    subproc: subprocess.Popen[str] | None = None
 
     def compose(self) -> ComposeResult:
         """Compose the application layout."""
@@ -59,7 +57,7 @@ class FastapiTUI(App[None]):
             ServerStatus(id="status"),
             id="statusline",
         )
-        yield ScrollableContainer(id="log")
+        yield RichLog(id="log")
         yield Footer()
 
     def on_mount(self) -> None:
@@ -70,6 +68,9 @@ class FastapiTUI(App[None]):
         self.start_button = self.query_one("#start")
 
         self.status_label = self.query_one("#status")
+
+        self.log_output = self.query_one("#log")
+        self.queue: Queue[str] = Queue()
 
     def on_unmount(self) -> None:
         """Stop the server if running when we shutdown."""
@@ -94,6 +95,12 @@ class FastapiTUI(App[None]):
             return shutil.which("uvicorn", path=venv_path)
         return None
 
+    def enqueue_output(self, out: IO[str], queue: Queue[str]) -> None:
+        """Enqueue strings from an IO stream."""
+        for line in iter(out.readline, b""):
+            queue.put(line)
+        out.close()
+
     def start_server(self) -> None:
         """Start the server."""
         if self.uvicorn_binary and not self.subproc:
@@ -116,10 +123,19 @@ class FastapiTUI(App[None]):
                 self.query_one(ServerStatus).server_status = "Running"
                 self.query_one(ServerStatus).styles.color = "lightgreen"
 
+                # start a thread to populate the queue
+                qt = threading.Thread(
+                    target=self.enqueue_output,
+                    args=(self.subproc.stdout, self.queue),
+                )
+                qt.daemon = True  # thread dies with the program
+                qt.start()
+
     def stop_server(self) -> None:
         """Stop the server."""
         if self.subproc:
             self.subproc.send_signal(signal.SIGINT)
+            self.subproc.wait()
             self.subproc = None
             self.stop_button.disabled = True
             self.start_button.disabled = False
