@@ -1,10 +1,4 @@
-"""Entry point for the main application loop.
-
-You can customize this file to your liking, or indeed empty it entirely and
-start from scratch.
-Note that if you remove the 'App' class entirely, you will need to remove the
-`[tool.poetry.scripts]` section from pyproject.toml as well (if it exist).
-"""
+"""Entry point for the main application loop."""
 
 from __future__ import annotations
 
