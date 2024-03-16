@@ -23,7 +23,7 @@ ServerStatus#status {
   color: red;
 }
 
-RichLog#log {
+LogViewer#log {
   min-height: 10;
   # background: $boost;
   margin-left: 1;

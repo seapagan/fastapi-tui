@@ -45,9 +45,8 @@ You can run the application using the following command:
 $ fastapi-tui
 ```
 
-It allows you to start and stop the FastAPI server, and to display the logs in
-a separate panel. The logs output is not styled yet but I'll look to improve
-that in the next iteration.
+The application allows you to start and stop the FastAPI server, and to display
+the (and clear) the log output in a separate panel.
 
 ## FastAPI server
 
@@ -59,7 +58,8 @@ $ uvicorn fastapi_tui.server:api --reload
 ```
 
 There is a single endpoint at `"/"` that returns a JSON response with a message.
-This server will be used initially to test the TUI application.
+This server will be used initially to test the TUI application. The "`/docs`"
+and "`/redoc`" endpoints are also available for testing the FastAPI server.
 
 ## Further Plans
 
