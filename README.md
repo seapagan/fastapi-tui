@@ -46,7 +46,7 @@ $ fastapi-tui
 ```
 
 The application allows you to start and stop the FastAPI server, and to display
-the (and clear) the log output in a separate panel.
+(and clear) the log output in a separate panel.
 
 ## FastAPI server
 
@@ -78,4 +78,4 @@ This project is released under the terms of the MIT license.
 
 The original Python boilerplate for this package was created using
 [Pymaker](https://github.com/seapagan/py-maker) by [Grant
-Ramsay](https://github.com/seapagan)
+Ramsay](https://github.com/seapagan) (Me! :grin:)
