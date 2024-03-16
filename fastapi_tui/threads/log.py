@@ -24,6 +24,7 @@ class LogThread(threading.Thread):
 
     def run(self) -> None:
         """Run the thread."""
+        self.log_view.add("[blue]Session Started\n")
         while not self.stop_event.is_set():
             try:
                 line = self.queue.get_nowait()
@@ -32,4 +33,4 @@ class LogThread(threading.Thread):
             else:
                 self.log_view.add(line.strip())
 
-        self.log_view.add("-------------------")
+        self.log_view.add("\n[blue]Session Closed")
