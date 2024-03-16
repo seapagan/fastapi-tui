@@ -13,6 +13,8 @@
 - cancel autoscroll when the user scrolls up, reenable when the user scrolls to
   the bottom.
 - add key bindings to toggle the server and to clear the logs.
+- add color to the `status_code` at the end of the line (ie `200 OK` or `404 Not
+  Found`).
 
 ## Docs
 
