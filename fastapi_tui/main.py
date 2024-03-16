@@ -23,8 +23,9 @@ from textual.containers import Horizontal
 from textual.css.query import NoMatches
 from textual.reactive import reactive
 from textual.widget import Widget
-from textual.widgets import Button, Footer, Header, Label, RichLog
+from textual.widgets import Button, Footer, Header, Label
 
+from fastapi_tui.log_viewer import LogViewer
 from fastapi_tui.threads import LogThread, QueueThread
 
 
@@ -76,7 +77,7 @@ class FastapiTUI(App[None]):
         )
         self.clear_button = Button("Clear Log", id="clear", variant="default")
         self.status_label = ServerStatus(id="status")
-        self.log_output = RichLog(id="log")
+        self.log_output = LogViewer(id="log")
 
         # ------------------------ display the widgets ----------------------- #
         yield Header()
@@ -159,7 +160,11 @@ class FastapiTUI(App[None]):
                 self.log_thread.start()
 
     def stop_server(self) -> None:
-        """Stop the server."""
+        """Stop the server.
+
+        This is called by button press, but also when the application is
+        shutting down (from the `on_unmount` method)
+        """
         if self.subproc:
             # stop the uvicorn server
             self.stop_server_process()
@@ -172,7 +177,7 @@ class FastapiTUI(App[None]):
             self.queue_thread.stop()
 
             try:
-                # this will raise 'NoMataches' if called when we are exiting.
+                # this will raise 'NoMatches' if called when we are exiting.
                 self.query_one(ServerStatus).server_status = "Not Running"
                 self.query_one(ServerStatus).styles.color = "red"
             except NoMatches:

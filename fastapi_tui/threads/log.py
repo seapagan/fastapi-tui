@@ -4,13 +4,13 @@ import threading
 import time
 from queue import Empty, Queue
 
-from textual.widgets import RichLog
+from fastapi_tui.log_viewer import LogViewer
 
 
 class LogThread(threading.Thread):
     """A Thread that writes to a RichLog widget."""
 
-    def __init__(self, log_view: RichLog, queue: Queue[str]) -> None:
+    def __init__(self, log_view: LogViewer, queue: Queue[str]) -> None:
         """Init the class."""
         super().__init__()
         self.log_view = log_view
@@ -30,6 +30,6 @@ class LogThread(threading.Thread):
             except Empty:  # noqa: PERF203
                 time.sleep(0.02)  # lets not grab all the CPU!
             else:
-                self.log_view.write(line.strip())
+                self.log_view.add(line.strip())
 
-        self.log_view.write("------------")
+        self.log_view.add("------------")
