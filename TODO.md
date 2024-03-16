@@ -2,18 +2,17 @@
 
 ## TUI App
 
-- Add key bindings to the footer.
 - add checkboxes for uvicorn options ie '--reload'.
 - show the current process command line at the bottom under the logs.
 - allow saving the log to a file. Ask for a file name, suggesting the current
   process name and the current date and time for example.
-- improve the RichLog to colourize the log lines.
-- set focus to the log after each button pressed as the button active highling
+- set focus to the log after each button pressed as the button active highlight
   bugs me. **That would not be great for accessibility though**.
 - maybe move the server status to the footer.
 - add the ability to run a custom process, not just uvicorn.
 - cancel autoscroll when the user scrolls up, reenable when the user scrolls to
   the bottom.
+- add key bindings to toggle the server and to clear the logs.
 
 ## Docs
 

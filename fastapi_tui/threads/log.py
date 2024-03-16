@@ -32,4 +32,4 @@ class LogThread(threading.Thread):
             else:
                 self.log_view.add(line.strip())
 
-        self.log_view.add("------------")
+        self.log_view.add("-------------------")
