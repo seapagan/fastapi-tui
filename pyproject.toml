@@ -26,6 +26,7 @@ fastapi-tui = "fastapi_tui.main:app"
 python = ">=3.9,<4.0"
 fastapi = { extras = ["all"], version = "^0.110.0" }
 textual = "^0.52.1"
+tzlocal = "^5.2"
 
 [build-system]
 requires = ["poetry-core"]
@@ -67,8 +68,13 @@ mkdocstrings = ">=0.24.1"
 pymdown-extensions = "^10.7"
 pygments = "^2.17.2"
 
-# setup PoeThePoet tasks
+# textual debugging
 textual-dev = "^1.5.1"
+
+# for type-checking
+types-tzlocal = "^5.1.0.1"
+
+# setup PoeThePoet tasks
 [tool.poe.tasks]
 pre.cmd = "pre-commit run --all-files"
 pre.help = "Run pre-commit checks"

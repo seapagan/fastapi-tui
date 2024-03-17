@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import locale
 import shutil
 import signal
 import subprocess
@@ -53,6 +54,8 @@ class FastapiTUI(App[None]):
         super().__init__()
         self.uvicorn_binary = self.get_uvicorn()
         self.queue: Queue[str] = Queue()
+
+        locale.setlocale(locale.LC_ALL, "")
 
     def action_exit_app(self) -> None:
         """Exit the application.
