@@ -2,7 +2,10 @@
 
 import threading
 import time
+from datetime import datetime
 from queue import Empty, Queue
+
+from tzlocal import get_localzone
 
 from fastapi_tui.log_viewer import LogViewer
 
@@ -17,6 +20,8 @@ class LogThread(threading.Thread):
         self.stop_event = threading.Event()
         self.queue = queue
 
+        self.timezone = get_localzone()
+
     def stop(self) -> None:
         """Stop the thread."""
         self.stop_event.set()
@@ -24,7 +29,7 @@ class LogThread(threading.Thread):
 
     def run(self) -> None:
         """Run the thread."""
-        self.log_view.add("[blue]Session Started\n")
+        self.log_view.add(f"[blue]Session Started @ {self.get_local_time()}\n")
         while not self.stop_event.is_set():
             try:
                 line = self.queue.get_nowait()
@@ -33,4 +38,10 @@ class LogThread(threading.Thread):
             else:
                 self.log_view.add(line.strip())
 
-        self.log_view.add("\n[blue]Session Closed")
+        self.log_view.add(f"\n[blue]Session Closed @ {self.get_local_time()}\n")
+
+    def get_local_time(self) -> str:
+        """Return the current time in the local timezone."""
+        return (
+            datetime.now(self.timezone).replace(microsecond=0).strftime("%X %x")
+        )
