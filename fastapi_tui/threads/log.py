@@ -38,7 +38,7 @@ class LogThread(threading.Thread):
             else:
                 self.log_view.add(line.strip())
 
-        self.log_view.add(f"\n[blue]Session Closed @ {self.get_local_time()}\n")
+        self.log_view.add(f"\n[blue]Session Closed @ {self.get_local_time()}")
 
     def get_local_time(self) -> str:
         """Return the current time in the local timezone."""
