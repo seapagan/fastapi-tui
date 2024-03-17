@@ -41,7 +41,9 @@ class FastapiTUI(App[None]):
     SUB_TITLE = "[WIP] A Textual UI for FastAPI"
 
     BINDINGS = [  # noqa: RUF012
-        Binding("ctrl+q", "exit", "Quit", key_display="^Q"),
+        Binding("ctrl+q", "exit_app", "Quit", key_display="^Q"),
+        Binding("ctrl+t", "toggle_server", "Toggle Server", key_display="^T"),
+        Binding("ctrl+l", "clear_log", "Clear Log", key_display="^L"),
     ]
 
     subproc: subprocess.Popen[str] | None = None
@@ -52,13 +54,30 @@ class FastapiTUI(App[None]):
         self.uvicorn_binary = self.get_uvicorn()
         self.queue: Queue[str] = Queue()
 
-    def action_exit(self) -> None:
+    def action_exit_app(self) -> None:
         """Exit the application.
 
         Called when the user presses 'ctrl+q'.
         """
         self.stop_server()
         self.exit()
+
+    def action_toggle_server(self) -> None:
+        """Toggle the server.
+
+        Called when the user presses 'ctrl+t'.
+        """
+        if self.subproc:
+            self.stop_server()
+        else:
+            self.start_server()
+
+    def action_clear_log(self) -> None:
+        """Clear the log.
+
+        Called when the user presses 'ctrl+l'.
+        """
+        self.log_output.clear()
 
     def compose(self) -> ComposeResult:
         """Compose the application layout."""
