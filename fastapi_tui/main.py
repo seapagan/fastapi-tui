@@ -42,6 +42,7 @@ class FastapiTUI(App[None]):
 
     BINDINGS = [  # noqa: RUF012
         Binding("ctrl+q", "exit", "Quit", key_display="^Q"),
+        Binding("ctrl+t", "toggle_server", "Toggle Server", key_display="^T"),
     ]
 
     subproc: subprocess.Popen[str] | None = None
@@ -59,6 +60,16 @@ class FastapiTUI(App[None]):
         """
         self.stop_server()
         self.exit()
+
+    def action_toggle_server(self) -> None:
+        """Toggle the server.
+
+        Called when the user presses 'ctrl+t'.
+        """
+        if self.subproc:
+            self.stop_server()
+        else:
+            self.start_server()
 
     def compose(self) -> ComposeResult:
         """Compose the application layout."""
