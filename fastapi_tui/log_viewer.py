@@ -35,14 +35,21 @@ class LogViewer(RichLog):
         self.highlight = True
         self.markup = True
 
-    def add(self, line: str) -> None:
+    def add(
+        self,
+        line: str,
+        no_parse: bool = False,  # noqa: FBT001
+    ) -> None:
         """Add a line to the log."""
-        log_level, message = self.split_text(line)
-        if log_level:
-            log_color = LogLevel[log_level.strip()[:-1].upper()].value
-            self.write(f"[{log_color}]{log_level}[/{log_color}]{message}")
+        if not no_parse:
+            log_level, message = self.split_text(line)
+            if log_level:
+                log_color = LogLevel[log_level.strip()[:-1].upper()].value
+                self.write(f"[{log_color}]{log_level}[/{log_color}]{message}")
+            else:
+                self.write(f"{line}")
         else:
-            self.write(f"{line}")
+            self.write(line)
 
     def split_text(self, input_text: str) -> tuple[str | None, str]:
         """Split out the LOG_LEVEL from the message if present.
