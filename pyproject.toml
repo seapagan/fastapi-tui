@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fastapi-tui"
-version = "0.1.0"
+version = "0.2.0"
 description = "Example TUI to control a fastapi development server."
 authors = ["Grant Ramsay <seapagan@gmail.com>"]
 readme = "README.md"

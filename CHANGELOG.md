@@ -6,31 +6,18 @@ project since the first release, with the latest changes at the top.
 This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Unreleased](https://github.com/seapagan/fastapi-tui/tree/HEAD)
-
-
-These are the changes that have been merged to the repository since the last
-release. If you want to try out these changes, you can install the latest
-version from the main branch by running:
-
-```console
-$ pip install git+https://github.com/seapagan/github-changelog-md
-```
-
-or, if using poetry:
-
-```console
-$ poetry add git+https://github.com/seapagan/github-changelog-md
-```
-Everything in this section will be included in the next official release.
-
+## [0.2.0](https://github.com/seapagan/fastapi-tui/releases/tag/0.2.0) (March 17, 2024)
 
 **New Features**
 
 - Add a timestamp to the session start/stop ([#4](https://github.com/seapagan/fastapi-tui/pull/4)) by [seapagan](https://github.com/seapagan)
 - Add key bindings to toggle the server and clear the log widget ([#3](https://github.com/seapagan/fastapi-tui/pull/3)) by [seapagan](https://github.com/seapagan)
 
-[`Full Changelog`](https://github.com/seapagan/fastapi-tui/compare/0.1.0...HEAD) | [`Diff`](https://github.com/seapagan/fastapi-tui/compare/0.1.0...HEAD.diff) | [`Patch`](https://github.com/seapagan/fastapi-tui/compare/0.1.0...HEAD.patch)
+**Documentation**
+
+- Add a CHANGELOG file ([#5](https://github.com/seapagan/fastapi-tui/pull/5)) by [seapagan](https://github.com/seapagan)
+
+[`Full Changelog`](https://github.com/seapagan/fastapi-tui/compare/0.1.0...0.2.0) | [`Diff`](https://github.com/seapagan/fastapi-tui/compare/0.1.0...0.2.0.diff) | [`Patch`](https://github.com/seapagan/fastapi-tui/compare/0.1.0...0.2.0.patch)
 
 ## [0.1.0](https://github.com/seapagan/fastapi-tui/releases/tag/0.1.0) (March 16, 2024)
 
