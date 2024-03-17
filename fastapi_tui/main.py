@@ -47,13 +47,12 @@ class FastapiTUI(App[None]):
         Binding("ctrl+l", "clear_log", "Clear Log", key_display="^L"),
     ]
 
-    subproc: subprocess.Popen[str] | None = None
-
     def __init__(self) -> None:
         """Initialize the application."""
         super().__init__()
         self.uvicorn_binary = self.get_uvicorn()
         self.queue: Queue[str] = Queue()
+        self.subproc: subprocess.Popen[str] | None = None
 
         locale.setlocale(locale.LC_ALL, "")
 
@@ -149,23 +148,29 @@ class FastapiTUI(App[None]):
         """Start the server."""
         if self.uvicorn_binary and not self.subproc:
             # Start the server process
-            self.subproc = subprocess.Popen(
-                [  # noqa: S603
-                    self.uvicorn_binary,
-                    "fastapi_tui.server:api",
-                    "--reload",
-                ],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.STDOUT,
-                text=True,
-                bufsize=1,
-                encoding="utf-8",
-            )
+            try:
+                self.subproc = subprocess.Popen(
+                    [  # noqa: S603
+                        self.uvicorn_binary,
+                        "fastapi_tui.server:api",
+                        "--reload",
+                    ],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    bufsize=1,
+                    encoding="utf-8",
+                )
+            except OSError as exc:
+                self.log_output.add(f"Error: {exc}")
+                self.status_label.server_status = "Error"
+                self.status_label.styles.color = "red"
+
             if self.subproc:
                 self.stop_button.disabled = False
                 self.start_button.disabled = True
-                self.query_one(ServerStatus).server_status = "Running"
-                self.query_one(ServerStatus).styles.color = "lightgreen"
+                self.status_label.server_status = "Running"
+                self.status_label.styles.color = "lightgreen"
 
                 self.queue_thread = QueueThread(
                     cast(IO[str], self.subproc.stdout), self.queue
@@ -179,7 +184,8 @@ class FastapiTUI(App[None]):
         """Stop the server.
 
         This is called by button press, but also when the application is
-        shutting down (from the `on_unmount` method)
+        shutting down (from the `on_unmount` method) or when the user toggles
+        the server off.
         """
         if self.subproc:
             # stop the uvicorn server
@@ -194,8 +200,8 @@ class FastapiTUI(App[None]):
 
             try:
                 # this will raise 'NoMatches' if called when we are exiting.
-                self.query_one(ServerStatus).server_status = "Not Running"
-                self.query_one(ServerStatus).styles.color = "red"
+                self.status_label.server_status = "Not Running"
+                self.status_label.styles.color = "red"
             except NoMatches:
                 pass
 
