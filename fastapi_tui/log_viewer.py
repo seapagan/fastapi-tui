@@ -46,10 +46,9 @@ class LogViewer(RichLog):
             if log_level:
                 log_color = LogLevel[log_level.strip()[:-1].upper()].value
                 self.write(f"[{log_color}]{log_level}[/{log_color}]{message}")
-            else:
-                self.write(f"{line}")
-        else:
-            self.write(line)
+                return
+
+        self.write(line)
 
     def split_text(self, input_text: str) -> tuple[str | None, str]:
         """Split out the LOG_LEVEL from the message if present.
