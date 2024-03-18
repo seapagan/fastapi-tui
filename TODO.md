@@ -14,6 +14,13 @@
   the bottom.
 - add color to the `status_code` at the end of the line (ie `200 OK` or `404 Not
   Found`).
+- allow passing the uvicorn options from the command line.
+- test for failure of the server to start, dump the error to the log. Right now
+  the start of the error is missing, and the body does not appear until the next
+  server start. (ensure uvicorn is outputing to the expected streams, or maybe
+  just needs a flush).
+- ensure for server failure that the server status and buttons are updated.
+  Change server status to 'failed' or similar.
 
 ## Docs
 
