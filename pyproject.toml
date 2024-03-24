@@ -55,6 +55,7 @@ pytest-watcher = "^0.4.1"
 mock = "^5.1.0"
 faker = ">=23.3.0"
 pyfakefs = "^5.3.5"
+greenlet = "^3.0.3"
 
 # documentation
 github-changelog-md = "^0.9.1"
