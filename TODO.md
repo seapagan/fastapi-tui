@@ -28,6 +28,10 @@ Document the application, working through and explaining the code. It took me a
 few hours to get this to a working state and I think it would be useful to
 document the process.
 
+## Testing
+
+- Write a test suite for the TUI application.
+
 ## Server
 
 I may add a few more endpoints to the server to test the TUI application with
