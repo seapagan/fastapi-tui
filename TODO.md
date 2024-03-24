@@ -21,6 +21,8 @@
   just needs a flush).
 - ensure for server failure that the server status and buttons are updated.
   Change server status to 'failed' or similar.
+- handle exceptions in the subprocess more gracefully. FastAPI does not always
+  crash on exceptions but does give a traceback.
 
 ## Docs
 
