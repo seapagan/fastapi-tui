@@ -54,7 +54,7 @@ pytest-mock = "^3.14.0"
 pytest-watcher = "^0.4.2"
 mock = "^5.1.0"
 faker = ">=23.3.0"
-pyfakefs = "^5.3.5"
+pyfakefs = "^5.4.1"
 greenlet = "^3.0.3"
 
 # documentation
