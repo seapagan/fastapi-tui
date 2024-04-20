@@ -50,9 +50,20 @@ class FastapiTUI(App[None]):
     def __init__(self) -> None:
         """Initialize the application."""
         super().__init__()
+
         self.uvicorn_binary = self.get_uvicorn()
+        if not self.uvicorn_binary:
+            print("-> uvicorn not found in the environment, aborting.")  # noqa: T201
+            self.exit()
+
         self.queue: Queue[str] = Queue()
         self.subproc: subprocess.Popen[str] | None = None
+
+        self.command_line = [
+            self.uvicorn_binary if self.uvicorn_binary else "",
+            "fastapi_tui.server:api",
+            "--reload",
+        ]
 
         locale.setlocale(locale.LC_ALL, "")
 
@@ -150,11 +161,7 @@ class FastapiTUI(App[None]):
             # Start the server process
             try:
                 self.subproc = subprocess.Popen(
-                    [  # noqa: S603
-                        self.uvicorn_binary,
-                        "fastapi_tui.server:api",
-                        "--reload",
-                    ],
+                    self.command_line,  # noqa: S603
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True,
