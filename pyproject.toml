@@ -66,7 +66,7 @@ mkdocs-git-revision-date-localized-plugin = "^1.2.4"
 mkdocs-latest-git-tag-plugin = "^0.1.2"
 mkdocs-minify-plugin = ">=0.8.0"
 mkdocstrings = ">=0.24.1"
-pymdown-extensions = "^10.7"
+pymdown-extensions = "^10.8"
 pygments = "^2.17.2"
 
 # textual debugging
