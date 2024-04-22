@@ -24,7 +24,7 @@ fastapi-tui = "fastapi_tui.main:app"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-fastapi = { extras = ["all"], version = "^0.110.1" }
+fastapi = { extras = ["all"], version = "^0.110.2" }
 textual = "^0.57.1"
 tzlocal = "^5.2"
 
