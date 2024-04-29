@@ -46,7 +46,7 @@ poethepoet = "^0.26.0"
 # testing
 pytest = "^8.1.0"
 pytest-cov = "^5.0.0"
-pytest-xdist = "^3.5.0"
+pytest-xdist = "^3.6.1"
 pytest-sugar = ">=1.0.0"
 pytest-randomly = "^3.15.0"
 pytest-reverse = "^1.7.0"
