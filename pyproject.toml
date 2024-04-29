@@ -35,7 +35,7 @@ build-backend = "poetry.core.masonry.api"
 # Configure dev dependencies you can add or remove as needed
 [tool.poetry.group.dev.dependencies]
 # linting, type-checking and security checks
-mypy = "^1.8.0"
+mypy = "^1.10.0"
 pre-commit = "^3.6.2"
 pymarkdownlnt = "^0.9.18"
 ruff = "^0.4.1"
