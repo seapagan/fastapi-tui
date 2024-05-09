@@ -38,7 +38,7 @@ build-backend = "poetry.core.masonry.api"
 mypy = "^1.10.0"
 pre-commit = "^3.6.2"
 pymarkdownlnt = "^0.9.18"
-ruff = "^0.4.1"
+ruff = "^0.4.4"
 
 # task runner
 poethepoet = "^0.26.0"
