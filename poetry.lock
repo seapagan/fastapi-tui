@@ -2790,13 +2790,13 @@ tests = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "textual"
-version = "0.57.1"
+version = "0.63.4"
 description = "Modern Text User Interface framework"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "textual-0.57.1-py3-none-any.whl", hash = "sha256:7a0a660525b207dd2ef5d95b7b9585f13d59ec0112de4c8f0a8dd0ffb2b9a6c4"},
-    {file = "textual-0.57.1.tar.gz", hash = "sha256:91029212b28c0cc73adad1e8b9fcda0b53947d4d81a1e8df4efbcb1346638744"},
+    {file = "textual-0.63.4-py3-none-any.whl", hash = "sha256:ca1e7a365b55ef96ea4664754268047d87b3aed33587858001514a0e60bbdc36"},
+    {file = "textual-0.63.4.tar.gz", hash = "sha256:c0f72915c1f3d8349d410b2014d3cfaa7909d594105e158ad91d25f9d9857eec"},
 ]
 
 [package.dependencies]
@@ -3547,4 +3547,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "07a86f0de381e2d9da0a472617df5a9562af3e78b8537177e15e0862508419a0"
+content-hash = "c84241df3f272fb45e42ac8f15ca9a52afaf488c1b38b9cc8189e786e64307fd"
