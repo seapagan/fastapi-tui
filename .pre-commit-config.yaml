@@ -2,7 +2,7 @@ ci:
   autofix_commit_msg: "[pre-commit.ci] auto fixes from pre-commit.com hooks [dependabot skip]"
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: check-yaml
         args: [--unsafe]
@@ -12,20 +12,20 @@ repos:
       - id: end-of-file-fixer
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.3.2
+    rev: v0.6.2
     hooks:
       - id: ruff
       - id: ruff-format
 
   - repo: https://github.com/jackdewinter/pymarkdown
-    rev: v0.9.17
+    rev: v0.9.22
     hooks:
       - id: pymarkdown
         exclude: .github/|CHANGELOG
         args: [-d, "MD046", scan]
 
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.9.0"
+    rev: "v1.11.2"
     hooks:
       - id: mypy
         name: "run mypy"
@@ -40,7 +40,7 @@ repos:
       # - id: poetry-lock
 
   - repo: https://github.com/python-poetry/poetry-plugin-export
-    rev: "1.6.0"
+    rev: "1.8.0"
     hooks:
       - id: poetry-export
         name: "export production dependencies"
