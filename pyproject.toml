@@ -24,9 +24,9 @@ fastapi-tui = "fastapi_tui.main:app"
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-fastapi = { extras = ["all"], version = "^0.110.2" }
-textual = "^0.57.1"
-tzlocal = "^5.2"
+fastapi = { extras = ["all"], version = ">=0.110.2" }
+textual = ">=0.57.1"
+tzlocal = ">=5.2"
 
 [build-system]
 requires = ["poetry-core"]
@@ -35,45 +35,45 @@ build-backend = "poetry.core.masonry.api"
 # Configure dev dependencies you can add or remove as needed
 [tool.poetry.group.dev.dependencies]
 # linting, type-checking and security checks
-mypy = "^1.10.0"
-pre-commit = "^3.6.2"
-pymarkdownlnt = "^0.9.18"
-ruff = "^0.4.1"
+mypy = ">=1.10.0"
+pre-commit = ">=3.6.2"
+pymarkdownlnt = ">=0.9.18"
+ruff = ">=0.4.1"
 
 # task runner
-poethepoet = "^0.26.0"
+poethepoet = ">=0.26.0"
 
 # testing
-pytest = "^8.1.0"
-pytest-cov = "^5.0.0"
-pytest-xdist = "^3.5.0"
+pytest = ">=8.1.0"
+pytest-cov = ">=5.0.0"
+pytest-xdist = ">=3.5.0"
 pytest-sugar = ">=1.0.0"
-pytest-randomly = "^3.15.0"
-pytest-reverse = "^1.7.0"
-pytest-mock = "^3.14.0"
-pytest-watcher = "^0.4.2"
-mock = "^5.1.0"
+pytest-randomly = ">=3.15.0"
+pytest-reverse = ">=1.7.0"
+pytest-mock = ">=3.14.0"
+pytest-watcher = ">=0.4.2"
+mock = ">=5.1.0"
 faker = ">=23.3.0"
-pyfakefs = "^5.4.1"
-greenlet = "^3.0.3"
+pyfakefs = ">=5.4.1"
+greenlet = ">=3.0.3"
 
 # documentation
-github-changelog-md = "^0.9.1"
-mkdocs = "^1.5.3"
+github-changelog-md = ">=0.9.1"
+mkdocs = ">=1.5.3"
 mkdocs-autorefs = ">=1.0.1"
-mkdocs-material = "^9.5.20"
-mkdocs-git-revision-date-localized-plugin = "^1.2.4"
-mkdocs-latest-git-tag-plugin = "^0.1.2"
+mkdocs-material = ">=9.5.20"
+mkdocs-git-revision-date-localized-plugin = ">=1.2.4"
+mkdocs-latest-git-tag-plugin = ">=0.1.2"
 mkdocs-minify-plugin = ">=0.8.0"
 mkdocstrings = ">=0.24.1"
-pymdown-extensions = "^10.8"
-pygments = "^2.17.2"
+pymdown-extensions = ">=10.8"
+pygments = ">=2.17.2"
 
 # textual debugging
-textual-dev = "^1.5.1"
+textual-dev = ">=1.5.1"
 
 # for type-checking
-types-tzlocal = "^5.1.0.1"
+types-tzlocal = ">=5.1.0.1"
 
 # setup PoeThePoet tasks
 [tool.poe.tasks]
