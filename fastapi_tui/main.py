@@ -160,8 +160,8 @@ class FastapiTUI(App[None]):
         if self.uvicorn_binary and not self.subproc:
             # Start the server process
             try:
-                self.subproc = subprocess.Popen(
-                    self.command_line,  # noqa: S603
+                self.subproc = subprocess.Popen(  # noqa: S603
+                    self.command_line,
                     stdout=subprocess.PIPE,
                     stderr=subprocess.STDOUT,
                     text=True,
